@@ -159,15 +159,15 @@ def montecarlo(dd, num_balls, num_repeats):
 
     return score
 
-def main2():
-    dd = [1974, 295, 17, 2]
+def drive_monte_carlo():
+    dd = [1639, 859, 69, 20, 1]
     xy = []
-    for num_balls in np.arange(9000, 9601, 5):
-        score = montecarlo(dd, num_balls, 500)
+    for num_balls in np.arange(4980, 5000, 10):
+        score = montecarlo(dd, num_balls, 10000)
         print(num_balls, score)
         xy.append((num_balls, score))
     xy = np.array(xy)
-    plt.plot(xy[:,0], xy[:,1], "*-")
+    plt.plot(xy[:,0], xy[:,1], "*")
     plt.show()
 
 def calc_ts_counts(ts, n):
@@ -176,11 +176,8 @@ def calc_ts_counts(ts, n):
         print(count, dd)
 
 def main():
-    #test_calc_count()
-    for num_draws in [9]:
-        for dd in enumerate_dd([], num_draws):
-            print(dd)
-
+    test_calc_count()
+    #drive_monte_carlo()
 
 if __name__ == "__main__":
     main()

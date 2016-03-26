@@ -105,7 +105,7 @@ def brute_force(num_balls, num_draws):
 
     return dd_distribution
 
-def calc_count(dd, num_balls):
+def calc_dd_count(dd, num_balls):
     """ Given a particular dd-tuple and num_balls (the number of different balls in the vase),
           return the number of different draws that result in the dd-tuple given.
     """
@@ -116,8 +116,8 @@ def calc_count(dd, num_balls):
     return math.factorial(num_draws) // np.product([math.factorial(d) * math.factorial(i) ** d for (i, d) in enumerate(dd, 1)]) * \
                   (math.factorial(num_balls) // math.factorial(num_balls - num_unique))
 
-def test_calc_count():
-    """ Verify that the result of calc_count() is identical to the count we obtain from
+def test_calc_dd_count():
+    """ Verify that the result of calc_dd_count() is identical to the count we obtain from
         a brute-force enumeration of all draw sequences.
     """
     for maxval in range(1, 101):
@@ -138,7 +138,7 @@ def test_calc_count():
 
                 total_count = 0
                 for (dd, count) in bf.most_common():
-                    calc = calc_count(dd, num_balls)
+                    calc = calc_dd_count(dd, num_balls)
                     print("{:10} --> {}".format(count, dd))
                     assert (count == calc)
                     total_count += count
@@ -177,7 +177,7 @@ def fast_enumerate(num_balls, num_draws):
     """
     dd_distribution = collections.Counter()
     for dd in enumerate_dd(num_balls, num_draws):
-        dd_distribution[dd] = calc_count(dd, num_balls)
+        dd_distribution[dd] = calc_dd_count(dd, num_balls)
     return dd_distribution
 
 def test_fast_enumerate():
@@ -197,7 +197,7 @@ def examine():
         refcount = dd_distribution[(3, )]
         for dd in dd_distribution:
             if dd_distribution[dd] < refcount:
-                cLess += calc_count(dd, num_balls)
+                cLess += calc_dd_count(dd, num_balls)
         print(num_balls, cLess)
 
 def check_tree():
@@ -209,7 +209,7 @@ def montecarlo(dd, num_balls, num_repeats):
 
     num_draws = np.dot(dd, np.arange(1, len(dd) + 1))
 
-    dd_count = calc_count(dd, num_balls)
+    dd_count = calc_dd_count(dd, num_balls)
 
     smaller = 0.0
 
@@ -218,7 +218,7 @@ def montecarlo(dd, num_balls, num_repeats):
         mc_count_duplicates = collections.Counter(collections.Counter(mc_draw).values())
         mc_dd = tuple(mc_count_duplicates[i] for i in range(1, 1 + max(mc_count_duplicates)))
         #print(mc_dd)
-        mc_count = calc_count(mc_dd, num_balls)
+        mc_count = calc_dd_count(mc_dd, num_balls)
         if mc_count < dd_count:
             smaller += 1.0
         elif mc_count == dd_count:
@@ -241,7 +241,7 @@ def drive_monte_carlo():
 
 def calc_ts_counts(ts, n):
     for dd in enumerate_dd([], 8, 10):
-        count = calc_count(dd, n)
+        count = calc_dd_count(dd, n)
         print(count, dd)
 
 def main():
